@@ -1,0 +1,5 @@
+# Node.js 기본 무시 파일
+node_modules/
+
+# 환경 변수 파일 무시
+.env
