@@ -1,7 +1,7 @@
 const express = require('express');
-// const db = require('./db');
 
 require('dotenv').config();
+const db = require('./mariadb');
 
 const app = express();
 app.use(express.json());
