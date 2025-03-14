@@ -7,9 +7,6 @@ const {
 router.use(express.json());
 
 
-// 카테고리별 도서 조회 
-router.get('/',booksByCategory)
-
 // 도서 조회 
 router.get('/',allBooks)
 

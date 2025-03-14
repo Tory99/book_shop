@@ -44,7 +44,7 @@ const bookDetail = (req,res) => {
                 return res.status(StatusCodes.BAD_REQUEST).end();
             }
 
-            if(result[0]){
+            if(results[0]){
                 return res.status(StatusCodes.OK).json(results);
             } else{
                 return res.status(StatusCodes.NOT_FOUND).end()
@@ -63,7 +63,7 @@ const booksByCategory = (req,res) => {
                 return res.status(StatusCodes.BAD_REQUEST).end();
             }
 
-            if(result.length){
+            if(results.length){
                 return res.status(StatusCodes.OK).json(results);
             } else{
                 return res.status(StatusCodes.NOT_FOUND).end()
