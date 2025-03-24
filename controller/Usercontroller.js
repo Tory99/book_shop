@@ -12,7 +12,7 @@ const join = (req,res)=> {
     const salt = crypto.randomBytes(64).toString('base64');
     const hashPassword = crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('base64');
 
-    let values = [email, password, salt];
+    let values = [email, hashPassword, salt];
 
     db.query(sql, values,
         (err, results) => {
@@ -21,7 +21,10 @@ const join = (req,res)=> {
                 return res.status(StatusCodes.BAD_REQUEST).end();
             }
 
-            return res.status(StatusCodes.CREATED).json(results);
+            if(results.affectedRows)
+                return res.status(StatusCodes.CREATED).json(results);
+            else
+                return res.status(StatusCodes.BAD_REQUEST).end();
         }
     )
 };
@@ -38,10 +41,11 @@ const login = (req, res) => {
 
         const loginUser = results[0];
 
-        const rawPassword = crypto.pbkdf2Sync(password, loginUser.salt, 10000, 64, 'sha512').toString('base64');
+        const hashPassword = crypto.pbkdf2Sync(password, loginUser.salt, 10000, 64, 'sha512').toString('base64');
 
         if(loginUser && loginUser.password == hashPassword){
             const token = jwt.sign({
+                id : loginUser.id,
                 email : loginUser.email
             }, process.env.PRIVATE_KEY, {
                 expiresIn : '5m',
@@ -56,7 +60,7 @@ const login = (req, res) => {
             return res.status(StatusCodes.UNAUTHORIZED)
         }
         return res.status(StatusCodes.CREATED).json(results);
-    })
+    }) 
 };
 
 const passwordResetRequest = (req, res) => {
